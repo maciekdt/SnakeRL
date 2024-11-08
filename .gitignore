@@ -1,0 +1,5 @@
+.venv/
+.vscode/
+**/__pycache__/
+dqn_snake.zip
+snake_game_video.mp4
