@@ -1,7 +1,7 @@
 import gymnasium as gym 
 from gymnasium import spaces
 import numpy as np
-from environment.snake_logic import Direction, SnakeLogic
+from src.environment.snake_logic import Direction, SnakeLogic
 
 class SnakeEnv(gym.Env):
     int_to_direction = {
@@ -28,14 +28,14 @@ class SnakeEnv(gym.Env):
         self.last_snake_array = snake_array
         self.last_apple_array = apple_array
         self.steps_in_episode_counter += 1
-        reward = -0.1
+        reward = -0.001
         if got_apple:
             reward = 1
         if game_over:
             reward = -1
         terminated = game_over 
         truncated = False
-        if self.steps_in_episode_counter > 500:
+        if self.steps_in_episode_counter > 1000:
             truncated = True
             reward = -1
         info = {}

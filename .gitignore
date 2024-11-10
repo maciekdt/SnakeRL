@@ -1,5 +1,8 @@
 .venv/
 .vscode/
 **/__pycache__/
-dqn_snake.zip
+.pytest_cache/
+videos/
+saved_models/
 snake_game_video.mp4
+tensorboard_logs/
