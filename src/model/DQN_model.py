@@ -15,9 +15,10 @@ eval_callback = EvalCallback(
     deterministic = True,
     render = False,
     verbose = 1,
+    eval_freq = 1000,
     best_model_save_path = os.path.join(
         base_dir,
-        "saved_models/best_checkpoint"
+        "logs/saved_models/best_checkpoints"
     )
 )
 def get_dqn_model(
@@ -28,8 +29,8 @@ def get_dqn_model(
     train_freq = 32,
     buffer_size = 100_000,
     exploration_fraction = 0.8,
-    tensorboard_log = os.path.join(base_dir, "tensorboard_logs"),
-    verbose = 2
+    tensorboard_log = os.path.join(base_dir, "logs/tensorboard_logs"),
+    verbose = 1
     ):
     
     return  DQN(

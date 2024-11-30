@@ -2,7 +2,4 @@
 .vscode/
 **/__pycache__/
 .pytest_cache/
-videos/
-saved_models/
-snake_game_video.mp4
-tensorboard_logs/
+logs_arch/

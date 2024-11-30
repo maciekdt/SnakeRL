@@ -5,8 +5,8 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 get_dqn_model().learn(
-    total_timesteps = 100_000,
+    total_timesteps = 10_000,
     progress_bar = True,
     callback = eval_callback,
-    log_interval = 10_000
+    log_interval = 1000
 )
