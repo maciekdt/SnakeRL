@@ -55,5 +55,6 @@ def get_dqn_model(
             net_arch = [32]
         ),
         
-        tensorboard_log = tensorboard_log
+        tensorboard_log = tensorboard_log,
+        device="cuda"
     )
