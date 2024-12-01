@@ -13,17 +13,13 @@ def optimize_dqn(trial):
     exploration_fraction = trial.suggest_float("exploration_fraction", 0.5, 0.9)
     
     features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
-    train_freq = trial.suggest_categorical('train_freq', [16, 32, 64])
-    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64])
-    buffer_size = trial.suggest_categorical('buffer_size', [10_000, 100_000, 1_000_000])
+    batch_size = trial.suggest_categorical('batch_size', [32, 64])
 
     model = get_dqn_model(
         learning_rate = learning_rate,
         gamma = gamma,
         features_dim = features_dim,
-        train_freq = train_freq,
         batch_size = batch_size,
-        buffer_size = buffer_size,
         exploration_fraction = exploration_fraction,
         tensorboard_log = None,
         verbose = 0
