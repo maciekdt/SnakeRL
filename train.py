@@ -8,11 +8,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using CPU")
 
 params_file = "logs/optuna_logs/DQN/best_params_dqn.json"
-with open(params_file, "r") as f:
+"""with open(params_file, "r") as f:
     params = json.load(f)
-    print("Optune hyperparams loaded")
+    print("Optune hyperparams loaded")"""
     
-get_dqn_model(**params).learn(
+get_dqn_model().learn(
     total_timesteps = 100_000_000,
     progress_bar = True,
     callback = eval_callback,
