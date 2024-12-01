@@ -19,4 +19,8 @@ class CNNFeatureExtractor(BaseFeaturesExtractor):
         )
         
     def forward(self, observation: dict) -> th.Tensor:
-        return self.cnn(observation)
+        print("Observation is on:", observation.device)
+        features = self.cnn(observation)
+        print("Features are on:", features.device)
+        return features
+        
