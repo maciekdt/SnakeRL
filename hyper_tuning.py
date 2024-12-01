@@ -1,5 +1,6 @@
 import optuna
 import json
+import torch
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.monitor import Monitor
 
@@ -28,11 +29,11 @@ def optimize_dqn(trial):
         verbose = 0
     )
     
-    total_learn_timesteps = 1000
+    total_learn_timesteps = 5_000_000
     
     eval_callback = EvalCallback(
         eval_env = Monitor(SnakeEnv()),
-        n_eval_episodes = 3,
+        n_eval_episodes = 30,
         eval_freq = total_learn_timesteps,
         best_model_save_path = None,
         deterministic = True,
@@ -40,12 +41,14 @@ def optimize_dqn(trial):
     )
 
     model.learn(
-        total_timesteps = total_learn_timesteps + 1,
+        total_timesteps = total_learn_timesteps + 100,
         callback=eval_callback,
         progress_bar = False
     )
 
     return eval_callback.last_mean_reward
+
+print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using CPU")
 
 log_path = "logs/optuna_logs/DQN/"
 study = optuna.create_study(
@@ -55,7 +58,7 @@ study = optuna.create_study(
 
 study.optimize(
     optimize_dqn,
-    n_trials = 10, 
+    n_trials = 30, 
     show_progress_bar = True
 )
 

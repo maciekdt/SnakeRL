@@ -15,7 +15,7 @@ eval_callback = EvalCallback(
     deterministic = True,
     render = False,
     verbose = 1,
-    eval_freq = 1000,
+    eval_freq = 1_000_000,
     best_model_save_path = os.path.join(
         base_dir,
         "logs/saved_models/best_checkpoints"
