@@ -58,7 +58,7 @@ study = optuna.create_study(
 
 study.optimize(
     optimize_dqn,
-    n_trials = 30, 
+    n_trials = 10, 
     show_progress_bar = True
 )
 
