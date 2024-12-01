@@ -43,7 +43,7 @@ def optimize_dqn(trial):
     model.learn(
         total_timesteps = total_learn_timesteps + 100,
         callback=eval_callback,
-        progress_bar = False
+        progress_bar = True
     )
 
     return eval_callback.last_mean_reward
