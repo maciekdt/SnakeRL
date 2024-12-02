@@ -30,7 +30,6 @@ def optimize_dqn(trial):
     num_envs = 4
     env_list = [make_env for _ in range(num_envs)]
     parallel_snake_env = SubprocVecEnv(env_list)
-    eval_env = DummyVecEnv([make_env])
 
     model = get_dqn_model(
         learning_rate = learning_rate,
@@ -46,14 +45,14 @@ def optimize_dqn(trial):
     eval_callback = EvalCallback(
         eval_env = parallel_snake_env,
         n_eval_episodes = 30,
-        eval_freq = args.steps,
+        eval_freq = args.steps // 4,
         best_model_save_path = None,
         deterministic = True,
         verbose = 0
     )
 
     model.learn(
-        total_timesteps = args.steps + 1000,
+        total_timesteps = args.steps + 10_000,
         callback=eval_callback,
         progress_bar = True
     )
