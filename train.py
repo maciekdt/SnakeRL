@@ -26,13 +26,19 @@ except FileNotFoundError:
 def make_env():
     return SnakeEnv()
 
-num_envs = 4
-env_list = [make_env for _ in range(num_envs)]
-parallel_snake_env = SubprocVecEnv(env_list)    
+if __name__ == "__main__":
+    import multiprocessing
+    multiprocessing.set_start_method("fork", force=True)
     
-get_dqn_model(**params, snake_env = parallel_snake_env).learn(
-    total_timesteps = args.steps,
-    progress_bar = True,
-    callback = eval_callback,
-    log_interval = 1_000_000
-)
+    num_envs = 4
+    env_list = [make_env for _ in range(num_envs)]
+    parallel_snake_env = SubprocVecEnv(env_list)    
+        
+    get_dqn_model(**params, snake_env = parallel_snake_env).learn(
+        total_timesteps = args.steps,
+        progress_bar = True,
+        callback = eval_callback,
+        log_interval = 1_000_000
+    )
+else:
+    print("Not in main dir")
