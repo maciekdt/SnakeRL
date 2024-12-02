@@ -44,7 +44,7 @@ def optimize_dqn(trial):
     )
 
     eval_callback = EvalCallback(
-        eval_env = eval_env,
+        eval_env = parallel_snake_env,
         n_eval_episodes = 30,
         eval_freq = args.steps,
         best_model_save_path = None,
