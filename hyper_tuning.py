@@ -11,7 +11,7 @@ from stable_baselines3.common.vec_env import SubprocVecEnv
 print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--steps", type = int, default = 200_000)
+parser.add_argument("--steps", type = int, default = 2_000_000)
 parser.add_argument("--trials", type = int, default = 20)
 args = parser.parse_args()
 
