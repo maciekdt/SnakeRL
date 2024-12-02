@@ -7,6 +7,7 @@ from stable_baselines3.common.monitor import Monitor
 from src.environment.snake_env import SnakeEnv
 from src.model.DQN_model import get_dqn_model
 from stable_baselines3.common.vec_env import SubprocVecEnv
+from stable_baselines3.common.vec_env import DummyVecEnv
 
 print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
 
@@ -29,6 +30,7 @@ def optimize_dqn(trial):
     num_envs = 4
     env_list = [make_env for _ in range(num_envs)]
     parallel_snake_env = SubprocVecEnv(env_list)
+    eval_env = DummyVecEnv([make_env])
 
     model = get_dqn_model(
         learning_rate = learning_rate,
@@ -42,7 +44,7 @@ def optimize_dqn(trial):
     )
 
     eval_callback = EvalCallback(
-        eval_env = Monitor(SnakeEnv()),
+        eval_env = eval_env,
         n_eval_episodes = 30,
         eval_freq = args.steps,
         best_model_save_path = None,
