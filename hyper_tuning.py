@@ -4,9 +4,9 @@ import torch
 import argparse
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.monitor import Monitor
-
 from src.environment.snake_env import SnakeEnv
 from src.model.DQN_model import get_dqn_model
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
 print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
 
@@ -15,6 +15,9 @@ parser.add_argument("--steps", type = int, default = 2_000_000)
 parser.add_argument("--trials", type = int, default = 20)
 args = parser.parse_args()
 
+def make_env():
+    return SnakeEnv()
+
 def optimize_dqn(trial):
     learning_rate = trial.suggest_float('learning_rate', .00001, .01, log=True)
     gamma = trial.suggest_float('gamma', .9, .999, log=True)
@@ -22,16 +25,28 @@ def optimize_dqn(trial):
     
     features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
     batch_size = trial.suggest_categorical('batch_size', [32, 64, 128])
+    
+    model = None
+    if __name__ == "__main__":
+        import multiprocessing
+        multiprocessing.set_start_method("fork", force=True)
+        
+        num_envs = 4
+        env_list = [make_env for _ in range(num_envs)]
+        parallel_snake_env = SubprocVecEnv(env_list)
 
-    model = get_dqn_model(
-        learning_rate = learning_rate,
-        gamma = gamma,
-        features_dim = features_dim,
-        batch_size = batch_size,
-        exploration_fraction = exploration_fraction,
-        tensorboard_log = None,
-        verbose = 0
-    )
+        model = get_dqn_model(
+            learning_rate = learning_rate,
+            gamma = gamma,
+            features_dim = features_dim,
+            batch_size = batch_size,
+            exploration_fraction = exploration_fraction,
+            tensorboard_log = None,
+            verbose = 0,
+            snake_env = parallel_snake_env
+        )
+    else:
+        print("Not in main dir")
     
     eval_callback = EvalCallback(
         eval_env = Monitor(SnakeEnv()),
