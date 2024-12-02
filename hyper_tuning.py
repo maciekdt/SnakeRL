@@ -26,28 +26,21 @@ def optimize_dqn(trial):
     features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
     batch_size = trial.suggest_categorical('batch_size', [32, 64, 128])
     
-    model = None
-    if __name__ == "__main__":
-        import multiprocessing
-        multiprocessing.set_start_method("fork", force=True)
-        
-        num_envs = 4
-        env_list = [make_env for _ in range(num_envs)]
-        parallel_snake_env = SubprocVecEnv(env_list)
+    num_envs = 4
+    env_list = [make_env for _ in range(num_envs)]
+    parallel_snake_env = SubprocVecEnv(env_list)
 
-        model = get_dqn_model(
-            learning_rate = learning_rate,
-            gamma = gamma,
-            features_dim = features_dim,
-            batch_size = batch_size,
-            exploration_fraction = exploration_fraction,
-            tensorboard_log = None,
-            verbose = 0,
-            snake_env = parallel_snake_env
-        )
-    else:
-        print("Not in main dir")
-    
+    model = get_dqn_model(
+        learning_rate = learning_rate,
+        gamma = gamma,
+        features_dim = features_dim,
+        batch_size = batch_size,
+        exploration_fraction = exploration_fraction,
+        tensorboard_log = None,
+        verbose = 0,
+        snake_env = parallel_snake_env
+    )
+
     eval_callback = EvalCallback(
         eval_env = Monitor(SnakeEnv()),
         n_eval_episodes = 30,
@@ -65,20 +58,24 @@ def optimize_dqn(trial):
 
     return eval_callback.last_mean_reward
 
-log_path = "logs/optuna_logs/DQN/"
-study = optuna.create_study(
-    direction="maximize",
-    storage = "sqlite:///" + log_path  + "study.db"
-)
+if __name__ == "__main__":
+    import multiprocessing
+    multiprocessing.set_start_method("fork", force=True)
+    
+    log_path = "logs/optuna_logs/DQN/"
+    study = optuna.create_study(
+        direction="maximize",
+        storage = "sqlite:///" + log_path  + "study.db"
+    )
 
-study.optimize(
-    optimize_dqn,
-    n_trials = args.trials, 
-    show_progress_bar = True
-)
+    study.optimize(
+        optimize_dqn,
+        n_trials = args.trials, 
+        show_progress_bar = True
+    )
 
-best_params = study.best_params
-best_params_path = log_path + "best_params_dqn.json"
+    best_params = study.best_params
+    best_params_path = log_path + "best_params_dqn.json"
 
-with open(best_params_path, "w") as f:
-    json.dump(best_params, f, indent=4)
+    with open(best_params_path, "w") as f:
+        json.dump(best_params, f, indent=4)
