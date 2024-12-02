@@ -4,10 +4,17 @@ from src.model.CNN_feature_extractor import CNNFeatureExtractor
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3 import DQN
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 snake_env = Monitor(SnakeEnv())
+def make_env():
+    return SnakeEnv()
+
+num_envs = 4
+env_list = [make_env for _ in range(num_envs)]
+parallel_snake_env = SubprocVecEnv(env_list)
  
 eval_callback = EvalCallback(
     eval_env = snake_env,
@@ -35,7 +42,7 @@ def get_dqn_model(
     
     return  DQN(
         policy = "MlpPolicy",
-        env = snake_env,
+        env = parallel_snake_env,
         verbose = verbose,
         
         learning_rate = learning_rate,
