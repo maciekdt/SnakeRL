@@ -25,7 +25,7 @@ def optimize_dqn(trial):
     exploration_fraction = trial.suggest_float("exploration_fraction", 0.5, 0.9)
     
     features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
-    batch_size = trial.suggest_categorical('batch_size', [32, 64, 128])
+    batch_size = trial.suggest_categorical('batch_size', [32, 128, 512])
     
     num_envs = 4
     env_list = [make_env for _ in range(num_envs)]
@@ -56,7 +56,10 @@ def optimize_dqn(trial):
         callback=eval_callback,
         progress_bar = True
     )
-
+    
+    del model.replay_buffer
+    del model
+    
     return eval_callback.last_mean_reward
 
 if __name__ == "__main__":
