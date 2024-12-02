@@ -8,7 +8,7 @@ from stable_baselines3 import DQN
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 snake_env = Monitor(SnakeEnv())
-    
+ 
 eval_callback = EvalCallback(
     eval_env = snake_env,
     n_eval_episodes = 20,
@@ -56,5 +56,4 @@ def get_dqn_model(
         ),
         
         tensorboard_log = tensorboard_log,
-        device="cuda"
     )

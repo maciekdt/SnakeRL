@@ -1,11 +1,19 @@
 import optuna
 import json
 import torch
+import argparse
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.monitor import Monitor
 
 from src.environment.snake_env import SnakeEnv
 from src.model.DQN_model import get_dqn_model
+
+print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--steps", type = int, default = 2_000_000)
+parser.add_argument("--trials", type = int, default = 20)
+args = parser.parse_args()
 
 def optimize_dqn(trial):
     learning_rate = trial.suggest_float('learning_rate', .00001, .01, log=True)
@@ -13,7 +21,7 @@ def optimize_dqn(trial):
     exploration_fraction = trial.suggest_float("exploration_fraction", 0.5, 0.9)
     
     features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
-    batch_size = trial.suggest_categorical('batch_size', [32, 64])
+    batch_size = trial.suggest_categorical('batch_size', [32, 64, 128])
 
     model = get_dqn_model(
         learning_rate = learning_rate,
@@ -25,26 +33,22 @@ def optimize_dqn(trial):
         verbose = 0
     )
     
-    total_learn_timesteps = 5_000_000
-    
     eval_callback = EvalCallback(
         eval_env = Monitor(SnakeEnv()),
         n_eval_episodes = 30,
-        eval_freq = total_learn_timesteps,
+        eval_freq = args.steps,
         best_model_save_path = None,
         deterministic = True,
         verbose = 0
     )
 
     model.learn(
-        total_timesteps = total_learn_timesteps + 100,
+        total_timesteps = args.steps + 1000,
         callback=eval_callback,
         progress_bar = True
     )
 
     return eval_callback.last_mean_reward
-
-print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using CPU")
 
 log_path = "logs/optuna_logs/DQN/"
 study = optuna.create_study(
@@ -54,7 +58,7 @@ study = optuna.create_study(
 
 study.optimize(
     optimize_dqn,
-    n_trials = 10, 
+    n_trials = args.trials, 
     show_progress_bar = True
 )
 
