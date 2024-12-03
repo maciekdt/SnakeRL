@@ -14,13 +14,13 @@ parser.add_argument("--steps", type = int, default = 2_000_000)
 parser.add_argument("--trials", type = int, default = 20)
 args = parser.parse_args()
 
+def make_env():
+    return SnakeEnv()
+
 num_envs = 8
 env_list = [make_env for _ in range(num_envs)]
 parallel_snake_env = SubprocVecEnv(env_list)
 print("Created vec-env on ", num_envs, " vCPUs")
-
-def make_env():
-    return SnakeEnv()
 
 def optimize_dqn(trial):
     learning_rate = trial.suggest_float('learning_rate', .00001, .01, log=True)
