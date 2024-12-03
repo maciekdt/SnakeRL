@@ -26,8 +26,9 @@ def optimize_dqn(trial, parallel_snake_env):
     gamma = trial.suggest_float('gamma', .9, .999, log=True)
     exploration_fraction = trial.suggest_float("exploration_fraction", 0.5, 0.9)
     
-    features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
+    features_dim = trial.suggest_categorical('features_dim', [32, 512, 2048])
     batch_size = trial.suggest_categorical('batch_size', [32, 128, 512])
+    buffer_size = trial.suggest_categorical('buffer_size', [100_000, 1_000_000])
     
     model = get_dqn_model(
         learning_rate = learning_rate,
@@ -35,6 +36,7 @@ def optimize_dqn(trial, parallel_snake_env):
         features_dim = features_dim,
         batch_size = batch_size,
         exploration_fraction = exploration_fraction,
+        buffer_size = buffer_size,
         tensorboard_log = None,
         verbose = 0,
         snake_env = parallel_snake_env
