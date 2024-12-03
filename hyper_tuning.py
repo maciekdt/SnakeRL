@@ -53,7 +53,14 @@ def optimize_dqn(trial, parallel_snake_env):
         progress_bar = True
     )
     
-    return eval_callback.last_mean_reward
+    mean_reward = eval_callback.last_mean_reward
+    
+    del model.replay_buffer
+    del model
+    del eval_callback
+    print("Replay buffer cleaned")
+    
+    return mean_reward
 
 if __name__ == "__main__":
     print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
@@ -63,7 +70,7 @@ if __name__ == "__main__":
     
     env_list = [make_env() for _ in range(num_envs)]
     parallel_snake_env = SubprocVecEnv(env_list)
-    print("Created vec-env on ", num_envs, " vCPUs")
+    print("Created vec-env on", num_envs, "vCPUs")
     
     log_path = "logs/optuna_logs/DQN/"
     study = optuna.create_study(
