@@ -14,8 +14,6 @@ parser.add_argument("--steps", type = int, default = 2_000_000)
 parser.add_argument("--trials", type = int, default = 20)
 args = parser.parse_args()
 
-print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
-
 def make_env():
     return SnakeEnv()
 
@@ -63,6 +61,8 @@ def optimize_dqn(trial):
     return eval_callback.last_mean_reward
 
 if __name__ == "__main__":
+    print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
+    
     import multiprocessing
     multiprocessing.set_start_method("fork", force=True)
     
