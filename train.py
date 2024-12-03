@@ -30,7 +30,7 @@ if __name__ == "__main__":
     import multiprocessing
     multiprocessing.set_start_method("fork", force=True)
     
-    num_envs = 4
+    num_envs = 8
     env_list = [make_env for _ in range(num_envs)]
     parallel_snake_env = SubprocVecEnv(env_list)    
         

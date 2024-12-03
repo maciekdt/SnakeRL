@@ -26,7 +26,7 @@ def get_dqn_model(
     features_dim = 128,
     batch_size = 64,
     train_freq = 32,
-    buffer_size = 100_000,
+    buffer_size = 200_000,
     exploration_fraction = 0.8,
     tensorboard_log = os.path.join(base_dir, "logs/tensorboard_logs"),
     verbose = 1,

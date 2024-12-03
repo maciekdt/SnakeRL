@@ -9,8 +9,6 @@ from src.model.DQN_model import get_dqn_model
 from stable_baselines3.common.vec_env import SubprocVecEnv
 from stable_baselines3.common.vec_env import DummyVecEnv
 
-print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--steps", type = int, default = 2_000_000)
 parser.add_argument("--trials", type = int, default = 20)
@@ -27,7 +25,7 @@ def optimize_dqn(trial):
     features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
     batch_size = trial.suggest_categorical('batch_size', [32, 128, 512])
     
-    num_envs = 4
+    num_envs = 8
     env_list = [make_env for _ in range(num_envs)]
     parallel_snake_env = SubprocVecEnv(env_list)
 
@@ -45,7 +43,7 @@ def optimize_dqn(trial):
     eval_callback = EvalCallback(
         eval_env = parallel_snake_env,
         n_eval_episodes = 30,
-        eval_freq = args.steps // 4,
+        eval_freq = args.steps // num_envs,
         best_model_save_path = None,
         deterministic = True,
         verbose = 0
@@ -63,6 +61,8 @@ def optimize_dqn(trial):
     return eval_callback.last_mean_reward
 
 if __name__ == "__main__":
+    print(f"Using device: {torch.cuda.get_device_name()}" if torch.cuda.is_available() else "Using device: CPU")
+    
     import multiprocessing
     multiprocessing.set_start_method("fork", force=True)
     
