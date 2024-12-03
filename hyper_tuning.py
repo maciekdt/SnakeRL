@@ -55,8 +55,8 @@ def optimize_dqn(trial):
         progress_bar = True
     )
     
-    del model.replay_buffer
-    del model
+    parallel_snake_env.close()
+    del parallel_snake_env
     
     return eval_callback.last_mean_reward
 
