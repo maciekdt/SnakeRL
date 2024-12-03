@@ -7,7 +7,9 @@ from stable_baselines3.common.monitor import Monitor
 from src.environment.snake_env import SnakeEnv
 from src.model.DQN_model import get_dqn_model
 from stable_baselines3.common.vec_env import SubprocVecEnv
-from stable_baselines3.common.vec_env import DummyVecEnv
+import gc
+import torch
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--steps", type = int, default = 2_000_000)
@@ -58,6 +60,10 @@ def optimize_dqn(trial, parallel_snake_env):
     del model.replay_buffer
     del model
     del eval_callback
+    
+    torch.cuda.empty_cache()
+    gc.collect()
+    
     print("Replay buffer cleaned")
     
     return mean_reward
