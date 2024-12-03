@@ -14,15 +14,12 @@ parser.add_argument("--steps", type = int, default = 2_000_000)
 parser.add_argument("--trials", type = int, default = 20)
 args = parser.parse_args()
 
-def make_env():
-    return SnakeEnv()
-
 num_envs = 8
-env_list = [make_env for _ in range(num_envs)]
-parallel_snake_env = SubprocVecEnv(env_list)
-print("Created vec-env on ", num_envs, " vCPUs")
 
-def optimize_dqn(trial):
+def make_env():
+    return lambda: SnakeEnv()
+
+def optimize_dqn(trial, parallel_snake_env):
     learning_rate = trial.suggest_float('learning_rate', .00001, .01, log=True)
     gamma = trial.suggest_float('gamma', .9, .999, log=True)
     exploration_fraction = trial.suggest_float("exploration_fraction", 0.5, 0.9)
@@ -64,6 +61,10 @@ if __name__ == "__main__":
     import multiprocessing
     multiprocessing.set_start_method("fork", force=True)
     
+    env_list = [make_env() for _ in range(num_envs)]
+    parallel_snake_env = SubprocVecEnv(env_list)
+    print("Created vec-env on ", num_envs, " vCPUs")
+    
     log_path = "logs/optuna_logs/DQN/"
     study = optuna.create_study(
         direction="maximize",
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     )
 
     study.optimize(
-        optimize_dqn,
+        lambda trial: optimize_dqn(trial, parallel_snake_env),
         n_trials = args.trials, 
         show_progress_bar = True
     )
