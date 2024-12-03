@@ -14,6 +14,11 @@ parser.add_argument("--steps", type = int, default = 2_000_000)
 parser.add_argument("--trials", type = int, default = 20)
 args = parser.parse_args()
 
+num_envs = 8
+env_list = [make_env for _ in range(num_envs)]
+parallel_snake_env = SubprocVecEnv(env_list)
+print("Created vec-env on ", num_envs, " vCPUs")
+
 def make_env():
     return SnakeEnv()
 
@@ -25,10 +30,6 @@ def optimize_dqn(trial):
     features_dim = trial.suggest_categorical('features_dim', [32, 128, 512])
     batch_size = trial.suggest_categorical('batch_size', [32, 128, 512])
     
-    num_envs = 8
-    env_list = [make_env for _ in range(num_envs)]
-    parallel_snake_env = SubprocVecEnv(env_list)
-
     model = get_dqn_model(
         learning_rate = learning_rate,
         gamma = gamma,
@@ -55,9 +56,6 @@ def optimize_dqn(trial):
         progress_bar = True
     )
     
-    parallel_snake_env.close()
-    del parallel_snake_env
-    
     return eval_callback.last_mean_reward
 
 if __name__ == "__main__":
@@ -83,3 +81,6 @@ if __name__ == "__main__":
 
     with open(best_params_path, "w") as f:
         json.dump(best_params, f, indent=4)
+        
+    parallel_snake_env.close()
+    del parallel_snake_env
