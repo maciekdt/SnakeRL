@@ -83,7 +83,9 @@ if __name__ == "__main__":
     log_path = "logs/optuna_logs/DQN/"
     study = optuna.create_study(
         direction="maximize",
-        storage = "sqlite:///" + log_path  + "study.db"
+        storage = "sqlite:///" + log_path  + "study.db",
+        load_if_exists = True,
+        study_name = "no-name-03a6446b-9722-4191-8720-a85a4c775ed0"
     )
 
     study.optimize(
