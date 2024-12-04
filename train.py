@@ -39,7 +39,7 @@ if __name__ == "__main__":
         total_timesteps = args.steps,
         progress_bar = True,
         callback = eval_callback,
-        log_interval = 1_000_000
+        log_interval = 1_000_000/num_envs
     )
 else:
     print("Not in main dir")
