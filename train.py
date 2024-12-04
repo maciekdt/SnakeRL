@@ -32,7 +32,6 @@ def make_env():
 
 
 if __name__ == "__main__":
-    
     eval_env = Monitor(SnakeEnv())
     eval_callback = EvalCallback(
         eval_env = eval_env,
