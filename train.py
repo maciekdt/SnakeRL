@@ -33,7 +33,7 @@ if __name__ == "__main__":
         params = {}
         print("JSON hyperparameter file not found. Using default parameters.")
     
-    num_envs = 8
+    num_envs = 7
     
     eval_env = Monitor(SnakeEnv())
     eval_callback = EvalCallback(
@@ -58,11 +58,9 @@ if __name__ == "__main__":
     env_list = [make_env for _ in range(num_envs)]
     parallel_snake_env = SubprocVecEnv(env_list)    
         
-    get_dqn_model(**params, snake_env=parallel_snake_env, tensorboard_log=None).learn(
+    get_dqn_model(**params, snake_env=parallel_snake_env, tensorboard_log=tensorboard_log_dir).learn(
         total_timesteps = args.steps,
         progress_bar = True,
         callback = eval_callback,
         log_interval = 1_000_000/num_envs,
     )
-else:
-    print("Not in main dir")
