@@ -14,12 +14,13 @@ eval_callback = EvalCallback(
     deterministic = True,
     render = False,
     verbose = 1,
-    eval_freq = 1_000_000 // 8,
+    eval_freq = 1_000_000 / 8,
     best_model_save_path = os.path.join(
         base_dir,
         "logs/saved_models/best_checkpoints"
     )
 )
+
 def get_dqn_model(
     learning_rate = .0001,
     gamma = .95,
