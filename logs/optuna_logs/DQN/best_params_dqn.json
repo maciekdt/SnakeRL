@@ -1,0 +1,8 @@
+{
+    "learning_rate": 0.0016106659785500308,
+    "gamma": 0.9466514493255401,
+    "exploration_fraction": 0.7538036817020256,
+    "features_dim": 32,
+    "batch_size": 1024,
+    "buffer_size": 1000000
+}

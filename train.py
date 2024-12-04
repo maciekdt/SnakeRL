@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--steps", type = int, default = 40_000_000)
 args = parser.parse_args()
 
+params = None
 params_file = "logs/optuna_logs/DQN/best_params_dqn.json"
 try:
     with open(params_file, "r") as f:
