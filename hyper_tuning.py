@@ -3,7 +3,6 @@ import json
 import torch
 import argparse
 from stable_baselines3.common.callbacks import EvalCallback
-from stable_baselines3.common.monitor import Monitor
 from src.environment.snake_env import SnakeEnv
 from src.model.DQN_model import get_dqn_model
 from stable_baselines3.common.vec_env import SubprocVecEnv

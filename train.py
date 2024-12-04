@@ -1,14 +1,11 @@
 from src.environment.snake_env import SnakeEnv
-from src.model.DQN_model import get_dqn_model
+from src.model.DQN_model import get_eval_callback, get_dqn_model
 import torch
 import sys
 import os
 import json
 import argparse
 from stable_baselines3.common.vec_env import SubprocVecEnv
-from stable_baselines3.common.callbacks import EvalCallback
-from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.logger import configure
 
 
     
@@ -21,6 +18,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--steps", type = int, default = 40_000_000)
+    parser.add_argument("--logging", type = int, default = 1_000_000)
+    parser.add_argument("--vcpu", type = int, default = 8)
     args = parser.parse_args()
 
     params = None
@@ -33,34 +32,23 @@ if __name__ == "__main__":
         params = {}
         print("JSON hyperparameter file not found. Using default parameters.")
     
-    num_envs = 7
+
     
-    eval_env = Monitor(SnakeEnv())
-    eval_callback = EvalCallback(
-        eval_env = eval_env,
-        n_eval_episodes = 20,
-        deterministic = True,
-        render = False,
-        verbose = 1,
-        eval_freq = 1_000_000 / num_envs,
-        best_model_save_path = os.path.join(
-            "logs/saved_models/best_checkpoints"
-        )
-    )
-    
-    tensorboard_log_dir = os.path.join("logs", "tensorboard_logs")
-    configure(folder=tensorboard_log_dir)
-    
+
     import multiprocessing
     multiprocessing.set_start_method("fork", force=True)
     
     
-    env_list = [make_env for _ in range(num_envs)]
-    parallel_snake_env = SubprocVecEnv(env_list)    
+    env_list = [make_env for _ in range(args.vcpu)]
+    parallel_snake_env = SubprocVecEnv(env_list)
+    print("Created vec-env on", args.vcpu, "vCPUs")
         
-    get_dqn_model(**params, snake_env=parallel_snake_env, tensorboard_log=tensorboard_log_dir).learn(
-        total_timesteps = args.steps,
-        progress_bar = True,
-        callback = eval_callback,
-        log_interval = 1_000_000/num_envs,
+    get_dqn_model(
+        **params,
+        snake_env=parallel_snake_env,
+        ).learn(
+            total_timesteps = args.steps,
+            progress_bar = True,
+            callback = get_eval_callback(args.logging / args.vcpu),
+            log_interval = args.logging / args.vcpu,
     )
