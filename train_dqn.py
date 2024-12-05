@@ -1,5 +1,6 @@
+from src.model.eval_callback import get_eval_callback
 from src.environment.snake_env import SnakeEnv
-from src.model.DQN_model import get_eval_callback, get_dqn_model
+from src.model.DQN_model import get_dqn_model
 import torch
 import sys
 import os

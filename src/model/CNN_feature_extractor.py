@@ -14,10 +14,18 @@ class CNNFeatureExtractor(BaseFeaturesExtractor):
             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=4, stride=1),
             nn.ReLU(),
             nn.Flatten(),       
-            nn.LazyLinear(out_features=features_dim),
+        )
+        
+        with th.no_grad():
+            dummy_input = th.zeros(1, *observation_space.shape)
+            n_flatten = self.cnn(dummy_input).shape[1]
+        
+        self.linear = nn.Sequential(
+            nn.Linear(n_flatten, features_dim),
             nn.ReLU(),
         )
         
     def forward(self, observation: dict) -> th.Tensor:
-        return self.cnn(observation)
+        x = self.cnn(observation)
+        return self.linear(x)
         

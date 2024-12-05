@@ -1,40 +1,32 @@
+from stable_baselines3 import A2C
 import os
 from src.environment.snake_env import SnakeEnv
 from src.model.CNN_feature_extractor import CNNFeatureExtractor
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3 import DQN
-
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def get_dqn_model(
-    learning_rate = .0001,
+def get_a2c_model(
+    learning_rate = .001,
     gamma = .95,
-    features_dim = 128,
-    batch_size = 64,
-    train_freq = 32,
-    buffer_size = 1_000_000,
-    exploration_fraction = 0.8,
-    tensorboard_log = os.path.join(base_dir, "logs/tensorboard_logs"),
+    ent_coef = 0.01,
+    n_steps = 10,
     verbose = 1,
-    snake_env = Monitor(SnakeEnv())
+    features_dim = 32,
+    snake_env = Monitor(SnakeEnv()),
+    tensorboard_log = os.path.join(base_dir, "logs/tensorboard_logs")
     ):
     
-    return  DQN(
+    return  A2C(
         policy = "MlpPolicy",
         env = snake_env,
         verbose = verbose,
         
         learning_rate = learning_rate,
         gamma = gamma,
+        ent_coef = ent_coef,
+        n_steps = n_steps,
         
-        buffer_size = buffer_size,
-        train_freq = train_freq,
-        batch_size = batch_size,
-        
-        exploration_initial_eps = 1,
-        exploration_final_eps = .05,
-        exploration_fraction = exploration_fraction,
         
         policy_kwargs = dict(
             features_extractor_class=CNNFeatureExtractor,
