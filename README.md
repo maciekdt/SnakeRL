@@ -82,14 +82,9 @@ When tuning hyperparameters with Optuna, memory leaks occurred due to the replay
 
 
 ### TensorBoard Logs
-![plot1](https://github.com/user-attachments/assets/13be0bb9-dc9b-4911-887a-9bc803c91ecd)
+![image](https://github.com/user-attachments/assets/3a356efc-7ed7-4956-89a0-258888f7646f)
+
 ![plot2](https://github.com/user-attachments/assets/18135995-d53d-4df3-aadd-e883c7bbed08)
-
-
-### Optuna Tuning Results (DQN)
-![plot4](https://github.com/user-attachments/assets/3cf6b1cf-a449-4b43-b037-9650358c183f)
-![plot3](https://github.com/user-attachments/assets/9f87355f-e9b1-4cfd-8da4-db34c60c1c8e)
-
 
 ---
 
