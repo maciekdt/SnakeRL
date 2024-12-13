@@ -4,7 +4,8 @@ This project explores **Reinforcement Learning** using two popular algorithms: *
 The Snake game was chosen as a simple environment to test and compare the performance of these algorithms.
 Along the way, I tackled various technical challenges related to training RL models.
 
-![snake_game_video-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/dc499dd6-499c-4adf-97f5-ea00a4825eef)
+![snake_game_video-ezgif com-resize](https://github.com/user-attachments/assets/d1d5cb96-4bb3-4edb-ab4a-32a3be9a9d78)
+
 
 ---
 
@@ -78,12 +79,6 @@ When tuning hyperparameters with Optuna, memory leaks occurred due to the replay
 ### A2C
 - Learned faster and achieved higher rewards earlier in training.
 - Required more computational resources and was less stable during longer training sessions.
-
----
-
-## Results
-
-### Video
 
 
 ### TensorBoard Logs
