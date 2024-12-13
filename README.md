@@ -4,6 +4,8 @@ This project explores **Reinforcement Learning** using two popular algorithms: *
 The Snake game was chosen as a simple environment to test and compare the performance of these algorithms.
 Along the way, I tackled various technical challenges related to training RL models.
 
+![snake_game_video-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/dc499dd6-499c-4adf-97f5-ea00a4825eef)
+
 ---
 
 ## Project Overview
