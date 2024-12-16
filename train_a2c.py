@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument("--steps", type = int, default = 40_000_000)
     parser.add_argument("--logging", type = int, default = 1_000_000)
     parser.add_argument("--vcpu", type = int, default = 8)
-    parser.add_argument("--checkpoint", type = str, default = "/logs/saved_models/best_model_a2c-v1.zip")
+    parser.add_argument("--checkpoint", type = str, default = "logs/saved_models/best_models/best_model_a2c-v1.zip")
     args = parser.parse_args()
 
     vec_env = make_vec_env(SnakeEnv, n_envs=args.vcpu, vec_env_cls=SubprocVecEnv)
