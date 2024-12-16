@@ -9,4 +9,4 @@ video_creator = VideoCreator(
     video_path="logs/log_videos/snake_game_video.mp4",
     fps=20
 )
-video_creator.create_video(num_steps=500)
+video_creator.create_video(num_steps=2000)

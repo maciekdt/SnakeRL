@@ -1,6 +1,6 @@
 import os
 import cv2
-from stable_baselines3 import DQN
+from stable_baselines3 import DQN, A2C
 from stable_baselines3.common.vec_env import DummyVecEnv
 from src.environment.snake_env import SnakeEnv
 
@@ -12,10 +12,10 @@ class VideoCreator:
         self.fps = fps
         self.base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-        self.model = DQN.load(os.path.join(self.base_dir, self.model_path))
+        self.model = A2C.load(os.path.join(self.base_dir, self.model_path))
         self.env = DummyVecEnv([lambda: env_class(render_mode="rgb_array")])
         
-    def create_video(self, num_steps=1000):
+    def create_video(self, num_steps=1500):
         obs = self.env.reset()
         
         frame = self.env.render(mode="rgb_array")

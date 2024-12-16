@@ -35,7 +35,7 @@ class SnakeEnv(gym.Env):
             reward = -1
         terminated = game_over 
         truncated = False
-        if self.steps_in_episode_counter > 1000:
+        if self.steps_in_episode_counter > 2000:
             truncated = True
             reward = -1
         info = {}
